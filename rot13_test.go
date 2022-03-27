@@ -13,9 +13,11 @@ func TestReader(t *testing.T) {
 	in := strings.NewReader("NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm")
 	r := rot13.NewReader(in)
 	buf := bytes.NewBuffer(make([]byte, 0))
-	io.Copy(buf, r)
+	if _, err := io.Copy(buf, r); err != nil {
+		t.Errorf("error while copying data: %v", err)
+	}
 	expected := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	if buf.String() != expected {
-		t.Fatalf("expected '%s', got '%v'", expected, buf.Bytes())
+		t.Errorf("expected '%s', got '%v'", expected, buf.Bytes())
 	}
 }
